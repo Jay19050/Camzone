@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Log in to your CamZone account.">
+    <title>Login — CamZone</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="Index.html">CamZone</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a href="Index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="About.html" class="nav-link">About</a></li>
+                    <li class="nav-item"><a href="register.html" class="nav-link">Register</a></li>
+                    <li class="nav-item"><a href="login.html" class="nav-link active">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== LOGIN FORM ===== -->
+    <div class="glass-form-wrapper animate-in">
+        <h2>Welcome Back</h2>
+        <p class="form-subtitle">Sign in to your CamZone account</p>
+
+        <div id="errorMsg" style="display:none;background:rgba(255,100,100,0.12);border:1px solid rgba(255,100,100,0.3);
+            border-radius:10px;padding:0.75rem 1rem;margin-bottom:1rem;color:#ff6b6b;font-size:0.88rem;"></div>
+
+        <form id="loginForm">
+            <div class="mb-3">
+                <label class="form-label" for="email">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="you@example.com" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+            </div>
+            <button type="submit" id="submitBtn" class="btn-modern btn-primary-glow">Login</button>
+        </form>
+        <p class="form-footer">Don't have an account? <a href="register.html">Register here</a></p>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="modern-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 mx-auto mt-3">
+                    <h5>CamZone</h5>
+                    <p class="footer-desc">Your one-stop shop for the best cameras, lenses, and accessories.</p>
+                </div>
+                <div class="col-md-2 mx-auto mt-3">
+                    <h5>Products</h5>
+                    <p><a href="#">DSLR Cameras</a></p>
+                    <p><a href="#">Mirrorless</a></p>
+                    <p><a href="#">Lenses</a></p>
+                    <p><a href="#">Accessories</a></p>
+                </div>
+                <div class="col-md-3 mx-auto mt-3">
+                    <h5>Quick Links</h5>
+                    <p><a href="Index.html">Home</a></p>
+                    <p><a href="About.html">About Us</a></p>
+                    <p><a href="login.html">Login</a></p>
+                    <p><a href="register.html">Register</a></p>
+                </div>
+                <div class="col-md-4 mx-auto mt-3">
+                    <h5>Contact</h5>
+                    <p>📍 Valsad, India</p>
+                    <p>✉️ support@CamZone.com</p>
+                    <p>📞 +91 9408669850</p>
+                </div>
+            </div>
+            <div class="footer-bottom">© 2026 CamZone. All Rights Reserved.</div>
+        </div>
+    </footer>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const errEl = document.getElementById('errorMsg');
+            errEl.style.display = 'none';
+            btn.textContent = 'Logging in…';
+            btn.disabled = true;
+
+            const body = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            };
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    window.location.href = 'Index.html';
+                } else {
+                    errEl.textContent = data.error;
+                    errEl.style.display = 'block';
+                    btn.textContent = 'Login';
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                errEl.textContent = 'Connection error. Is the server running?';
+                errEl.style.display = 'block';
+                btn.textContent = 'Login';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>
